@@ -139,17 +139,18 @@ public class QueryDAO {
 			pstmt.setString(1, goId);
 			pstmt.setString(2, dsName);
 			rs = pstmt.executeQuery();
-			
+			rs.setFetchSize(5000);
 			while(rs.next()) {
 				resultSubQuery1.add(rs.getInt(1));
 			}
 			rs.close();
 			
 			sql = Queries.QUERY_FOUR_B;
+			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, goId);
 			pstmt.setString(2, dsName);
-			pstmt = connection.prepareStatement(sql);
 			rs = pstmt.executeQuery();
+			rs.setFetchSize(5000);
 			while(rs.next()) {
 				resultSubQuery2.add(rs.getInt(1));
 			}
