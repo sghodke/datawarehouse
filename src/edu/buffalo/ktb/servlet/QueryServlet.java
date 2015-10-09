@@ -65,6 +65,11 @@ public class QueryServlet extends HttpServlet {
                 System.out.println(str);
             }
             break;
+            
+        case "3":
+        	queryService.getResultQueryFour("", "");
+        	break;
+        	
         default:
             break;
         }

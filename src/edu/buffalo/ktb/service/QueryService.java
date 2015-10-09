@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.math3.stat.inference.TTest;
+
 import edu.buffalo.ktb.bean.Patient;
 import edu.buffalo.ktb.dao.QueryDAO;
 
@@ -53,6 +55,29 @@ public class QueryService {
 		} else {
 			return (new ArrayList<Integer>());
 		}
+	}
+	
+	public void getResultQueryFour(String goId, String dsName) {
+		List<List<Integer>> resultList = queryDAO.getResultQueryFour(goId, dsName);
+		List<Integer> patientsWithALL = resultList.get(0);
+		List<Integer> patientsWithoutALL = resultList.get(1);
+		
+		TTest ttest = new TTest();
+		
+		double[] list1 = new double[patientsWithALL.size()];
+		//patientsWithALL.toArray(list1);
+		int i = 0;
+		for(Integer exp: patientsWithALL) {
+			list1[i++] = exp.doubleValue();
+		}
+		double[] list2 = new double[patientsWithoutALL.size()];
+		//patientsWithALL.toArray(list1);
+		i = 0;
+		for(Integer exp: patientsWithoutALL) {
+			list2[i++] = exp.doubleValue();
+		}
+		double tvalue = ttest.homoscedasticT(list1, list2);
+		System.out.println("T-stat: " + tvalue);
 	}
 
 }

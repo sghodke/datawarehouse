@@ -128,6 +128,48 @@ public class QueryDAO {
 		return null;
 	}
 	
+	public List<List<Integer>> getResultQueryFour(String goId, String dsName) {
+		
+		try {
+			List<Integer> resultSubQuery1 = new ArrayList<Integer>();
+			List<Integer> resultSubQuery2 = new ArrayList<Integer>();
+			connection = DBManager.getInstance().getConnection();
+			String sql = "select mf.EXP from MICROARRAY_FACT mf where mf.PB_ID in ("
+							+ "select pr.PB_ID from PROBE pr JOIN GENE_FACT gf on pr.U_ID = gf.U_ID and gf.GO_ID = '0012502') "
+							+ "and mf.S_ID in ("
+							+ "select cs.s_id from CLINICAL_SAMPLE cs JOIN PATIENT p on cs.P_ID = p.P_ID and p.P_ID in ("
+							+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and ds.NAME = 'ALL'))";
+			pstmt = connection.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				resultSubQuery1.add(rs.getInt(1));
+			}
+			
+			rs.close();
+			
+			sql = "select mf.EXP from MICROARRAY_FACT mf where mf.PB_ID in ("
+					+ "select pr.PB_ID from PROBE pr JOIN GENE_FACT gf on pr.U_ID = gf.U_ID and gf.GO_ID = '0012502') "
+					+ "and mf.S_ID in ("
+					+ "select cs.s_id from CLINICAL_SAMPLE cs JOIN PATIENT p on cs.P_ID = p.P_ID and p.P_ID in ("
+					+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and ds.NAME != 'ALL'))";
+			pstmt = connection.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				resultSubQuery2.add(rs.getInt(1));
+			}
+			
+			List<List<Integer>> resultList = new ArrayList<List<Integer>>();
+			resultList.add(resultSubQuery1);
+			resultList.add(resultSubQuery2);
+			return resultList;
+			
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
+		
+		return null;
+	}
+	
 	
 	/**
 	 * close the resources
