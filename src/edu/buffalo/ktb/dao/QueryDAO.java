@@ -134,24 +134,20 @@ public class QueryDAO {
 			List<Integer> resultSubQuery1 = new ArrayList<Integer>();
 			List<Integer> resultSubQuery2 = new ArrayList<Integer>();
 			connection = DBManager.getInstance().getConnection();
-			String sql = "select mf.EXP from MICROARRAY_FACT mf where mf.PB_ID in ("
-							+ "select pr.PB_ID from PROBE pr JOIN GENE_FACT gf on pr.U_ID = gf.U_ID and gf.GO_ID = '0012502') "
-							+ "and mf.S_ID in ("
-							+ "select cs.s_id from CLINICAL_SAMPLE cs JOIN PATIENT p on cs.P_ID = p.P_ID and p.P_ID in ("
-							+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and ds.NAME = 'ALL'))";
+			String sql = Queries.QUERY_FOUR_A;
 			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, goId);
+			pstmt.setString(2, dsName);
 			rs = pstmt.executeQuery();
+			
 			while(rs.next()) {
 				resultSubQuery1.add(rs.getInt(1));
 			}
-			
 			rs.close();
 			
-			sql = "select mf.EXP from MICROARRAY_FACT mf where mf.PB_ID in ("
-					+ "select pr.PB_ID from PROBE pr JOIN GENE_FACT gf on pr.U_ID = gf.U_ID and gf.GO_ID = '0012502') "
-					+ "and mf.S_ID in ("
-					+ "select cs.s_id from CLINICAL_SAMPLE cs JOIN PATIENT p on cs.P_ID = p.P_ID and p.P_ID in ("
-					+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and ds.NAME != 'ALL'))";
+			sql = Queries.QUERY_FOUR_B;
+			pstmt.setString(1, goId);
+			pstmt.setString(2, dsName);
 			pstmt = connection.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
@@ -170,7 +166,37 @@ public class QueryDAO {
 		return null;
 	}
 	
-	
+	public List<List<Integer>> getResultQueryFive(String goId, List<String> dsNames) {
+		
+		try {
+			connection = DBManager.getInstance().getConnection();
+			String sql = Queries.QUERY_FIVE;
+			pstmt = connection.prepareStatement(sql);
+			
+			List<List<Integer>> resultList = new ArrayList<List<Integer>>();
+			List<Integer> resultSubQuery;
+			for(String dsName: dsNames) {
+				resultSubQuery = new ArrayList<Integer>();
+				pstmt.setString(1, goId);
+				pstmt.setString(2, dsName.toUpperCase());
+				rs = pstmt.executeQuery();
+				rs.setFetchSize(4000);
+				while(rs.next()) {
+					resultSubQuery.add(rs.getInt(1));
+				}
+				rs.close();
+				resultList.add(resultSubQuery);
+			}
+
+			return resultList;
+			
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
+		
+		return null;
+	}
+		
 	/**
 	 * close the resources
 	 */

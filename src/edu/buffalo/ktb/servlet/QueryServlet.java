@@ -66,8 +66,19 @@ public class QueryServlet extends HttpServlet {
             }
             break;
             
-        case "3":
-        	queryService.getResultQueryFour("", "");
+        case "4":
+        	double tstat = queryService.getResultQueryFour("", "");
+        	System.out.println("T-stat: " + tstat);
+        	break;
+        	
+        case "5":
+        	String goId = request.getParameter("goId");
+        	String dsNameOne = request.getParameter("dsNameOne");
+        	String dsNameTwo = request.getParameter("dsNameTwo");
+        	String dsNameThree = request.getParameter("dsNameThree");
+        	String dsNameFour = request.getParameter("dsNameFour");
+        	double fstat = queryService.getResultQueryFive(goId, dsNameOne, dsNameTwo, dsNameThree, dsNameFour);
+        	System.out.println("F-stat:" + fstat);
         	break;
         	
         default:

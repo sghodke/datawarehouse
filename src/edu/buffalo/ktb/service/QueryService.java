@@ -2,10 +2,12 @@ package edu.buffalo.ktb.service;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.math3.stat.inference.OneWayAnova;
 import org.apache.commons.math3.stat.inference.TTest;
 
 import edu.buffalo.ktb.bean.Patient;
@@ -57,7 +59,7 @@ public class QueryService {
 		}
 	}
 	
-	public void getResultQueryFour(String goId, String dsName) {
+	public double getResultQueryFour(String goId, String dsName) {
 		List<List<Integer>> resultList = queryDAO.getResultQueryFour(goId, dsName);
 		List<Integer> patientsWithALL = resultList.get(0);
 		List<Integer> patientsWithoutALL = resultList.get(1);
@@ -65,19 +67,44 @@ public class QueryService {
 		TTest ttest = new TTest();
 		
 		double[] list1 = new double[patientsWithALL.size()];
-		//patientsWithALL.toArray(list1);
 		int i = 0;
 		for(Integer exp: patientsWithALL) {
 			list1[i++] = exp.doubleValue();
 		}
+		
 		double[] list2 = new double[patientsWithoutALL.size()];
-		//patientsWithALL.toArray(list1);
 		i = 0;
 		for(Integer exp: patientsWithoutALL) {
 			list2[i++] = exp.doubleValue();
 		}
-		double tvalue = ttest.homoscedasticT(list1, list2);
-		System.out.println("T-stat: " + tvalue);
+		
+		double tstat = ttest.homoscedasticT(list1, list2);
+		return tstat;
+	}
+	
+	public double getResultQueryFive(String goId, String dsNameOne, String dsNameTwo, String dsNameThree, String dsNameFour) {
+		List<String> dsNames = new ArrayList<String>();
+		dsNames.add(dsNameOne);
+		dsNames.add(dsNameTwo);
+		dsNames.add(dsNameThree);
+		dsNames.add(dsNameFour);
+		
+		List<List<Integer>> resultList = queryDAO.getResultQueryFive(goId, dsNames);
+		Collection<double[]> categoryData = new ArrayList<double[]>();
+		
+		double[] list;
+		for(List<Integer> expList: resultList) {
+			list = new double[expList.size()];
+			int i = 0;
+			for(Integer exp: expList) {
+				list[i++] = exp.doubleValue();
+			}
+			categoryData.add(list);
+		}
+		
+		OneWayAnova onw = new OneWayAnova();
+		double fstat = onw.anovaFValue(categoryData);
+		return fstat;
 	}
 
 }

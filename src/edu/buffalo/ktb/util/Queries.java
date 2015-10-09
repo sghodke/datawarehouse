@@ -17,5 +17,22 @@ public class Queries {
     		+ "where mf.S_ID=cs.S_ID and dg.DS_ID=ds.DS_ID and dg.P_ID=cs.P_ID and ds.DS_ID in ("
     		+ "select  ds.DS_ID from DISEASE ds where ds.NAME=? GROUP BY ds.DS_ID))";
 
+    public static final String QUERY_FOUR_A = "select mf.EXP from MICROARRAY_FACT mf where mf.PB_ID in ("
+			+ "select pr.PB_ID from PROBE pr JOIN GENE_FACT gf on pr.U_ID = gf.U_ID and gf.GO_ID = ?) "
+			+ "and mf.S_ID in ("
+			+ "select cs.s_id from CLINICAL_SAMPLE cs JOIN PATIENT p on cs.P_ID = p.P_ID and p.P_ID in ("
+			+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and ds.NAME = ?))";
+    
+    public static final String QUERY_FOUR_B = "select mf.EXP from MICROARRAY_FACT mf where mf.PB_ID in ("
+			+ "select pr.PB_ID from PROBE pr JOIN GENE_FACT gf on pr.U_ID = gf.U_ID and gf.GO_ID = ?) "
+			+ "and mf.S_ID in ("
+			+ "select cs.s_id from CLINICAL_SAMPLE cs JOIN PATIENT p on cs.P_ID = p.P_ID and p.P_ID in ("
+			+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and ds.NAME != ?))";
+    
+    public static final String QUERY_FIVE = "select mf.EXP from MICROARRAY_FACT mf where mf.PB_ID in ("
+			+ "select pr.PB_ID from PROBE pr JOIN GENE_FACT gf on pr.U_ID = gf.U_ID and gf.GO_ID = ?) "
+			+ "and mf.S_ID in ("
+			+ "select cs.s_id from CLINICAL_SAMPLE cs JOIN PATIENT p on cs.P_ID = p.P_ID and p.P_ID in ("
+			+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and UPPER(ds.NAME) = ?))";
 
 }
