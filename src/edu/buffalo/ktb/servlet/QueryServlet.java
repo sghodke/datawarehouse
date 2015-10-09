@@ -43,16 +43,33 @@ public class QueryServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		List<Patient> patientList = queryService.getPatients();
 		System.out.println(patientList.size() + "\n");
+		String queryNo=request.getParameter("queryNo");
 		
-		String description = request.getParameter("description");
-		String name = request.getParameter("name");
-		String type = request.getParameter("type");
+		switch (queryNo) {
+        case "1":
+            String description = request.getParameter("description");
+            String name = request.getParameter("name");
+            String type = request.getParameter("type");
+            Map<String, Integer> resultQueryOne = queryService.getResultQueryOne(description, name, type);
+            Set<String> keys = resultQueryOne.keySet();
+            for(String key: keys) {
+                System.out.println(key + ": " + resultQueryOne.get(key));
+            }
+            break;
+        case "2":
+            String description1=request.getParameter("description2");
+            List<String> resultQueryTwo=queryService.getResultQueryTwo(description1);
+            System.out.println("Total number of results"+resultQueryTwo.size());
+            System.out.println("Drug Types:-->\n");
+            for(String str:resultQueryTwo){
+                System.out.println(str);
+            }
+            break;
+        default:
+            break;
+        }
 		
-		Map<String, Integer> resultQueryOne = queryService.getResultQueryOne(description, name, type);
-		Set<String> keys = resultQueryOne.keySet();
-		for(String key: keys) {
-			System.out.println(key + ": " + resultQueryOne.get(key));
-		}
+		
 	}
 
 }

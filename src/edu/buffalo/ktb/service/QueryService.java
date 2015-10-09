@@ -35,5 +35,15 @@ public class QueryService {
 		}
 	}
 	
+public List<String> getResultQueryTwo(String description) {
+
+        List<String> resultString = queryDAO.getResultQueryTwo(description);
+        if(resultString != null) {
+            return resultString;
+        } else {
+            return(new ArrayList<String>());
+        }
+    }
+	
 
 }

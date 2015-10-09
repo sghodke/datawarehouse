@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import edu.buffalo.ktb.bean.Patient;
 import edu.buffalo.ktb.db.DBManager;
+import edu.buffalo.ktb.util.Queries;
 
 public class QueryDAO {
 
@@ -49,16 +49,13 @@ public class QueryDAO {
 		
 		return null;
 	}
-	
 	public Map<String, Integer> getResultQueryOne(String description, String name, String type) {
 		
 		try {
 			Map<String, Integer> resultMap = new HashMap<String, Integer>();
 			
 			connection = DBManager.getInstance().getConnection();
-			String sql = "select d.DESCRIPTION, count(*) FROM DISEASE d inner join DIAGNOSIS dg on d.DS_ID=dg.DS_ID and d.DESCRIPTION=? group by d.DESCRIPTION"
-					+ " UNION select d.NAME, count(*) from DISEASE d inner join DIAGNOSIS dg on d.DS_ID=dg.DS_ID and d.NAME=? group by d.NAME"
-					+ " UNION select d.TYPE, count(*) from DISEASE d inner join DIAGNOSIS dg on d.DS_ID=dg.DS_ID and d.TYPE=? group by d.TYPE";
+			String sql=Queries.Query1;
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, description);
 			pstmt.setString(2, name);
@@ -79,17 +76,11 @@ public class QueryDAO {
 		
 		return null;
 	}
-	
-	
 	public List<String> getResultQueryTwo(String description) {
-		
 		try {
-			
 			List<String> resultList = new ArrayList<String>();
-			
 			connection = DBManager.getInstance().getConnection();
-			String sql = "select distinct d.TYPE from DRUG d join DRUG_USE du on d.DR_ID=du.DR_ID and (du.P_ID in "
-					+ "(select dg.P_ID from DIAGNOSIS dg join DISEASE ds on dg.DS_ID=ds.DS_ID and ds.DESCRIPTION=?))";
+			String sql = Queries.Query2;
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, description);
 			rs = pstmt.executeQuery();

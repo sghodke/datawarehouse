@@ -9,13 +9,18 @@
 <body>
 
 	<form action="QueryServlet" id="testQuery" method="post">
-	
+	   
+	   QueryNo: <input type="text" name="queryNo" />
+	    <br>
+	    Query-1
 		Description: <input type="text" name="description" />
 		Name: <input type="text" name="name" />
 		Type: <input type="text" name="type" />
-		
-		<input type="submit" value="Get Patient List" />
-	
+		<br>
+		Query-2
+		Description: <input type="text" name="description2" />
+		<br>
+		<input type="submit" value="Get Results" />
 	</form>
 
 </body>
