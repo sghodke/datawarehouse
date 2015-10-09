@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+
 import edu.buffalo.ktb.bean.Patient;
 import edu.buffalo.ktb.db.DBManager;
 import edu.buffalo.ktb.util.Queries;
@@ -197,7 +200,139 @@ public class QueryDAO {
 		
 		return null;
 	}
-		
+	
+	/*
+	 * Harwani
+	 */
+	
+	public double[] getResultQuerySixPart1(String goId) {
+	    Map<String,List<Double>> patientExpressionMapALL=new HashMap<String,List<Double>>();
+	    try {
+            connection = DBManager.getInstance().getConnection();
+            String sql = Queries.QUERY_SIX_ALL;
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, goId);
+            rs = pstmt.executeQuery();
+            
+            while(rs.next()) {
+                String patientId=rs.getString(1);
+                Double expression=Double.valueOf(rs.getInt(2));
+                if(patientExpressionMapALL.containsKey(patientId)){
+                    List<Double> expressionList=patientExpressionMapALL.get(patientId);
+                    expressionList.add(expression);
+                }
+                else{
+                    List<Double> expressionList=new ArrayList<Double>();
+                    expressionList.add(expression);
+                    patientExpressionMapALL.put(patientId, expressionList);
+                }
+                System.out.println(rs.getString(1));
+                System.out.println(rs.getInt(2));
+            }
+            double correlationALL=calculateJoinAndCorrelationALL(patientExpressionMapALL);
+            double correlationALLAML=getResultQuerySixPart2(goId,patientExpressionMapALL);
+            double[] correlation=new double[2];
+            correlation[0]=correlationALL;
+            correlation[1]=correlationALLAML;
+            return correlation;
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+        } finally {
+            close();
+        }
+	    return null;
+	   
+	}
+	
+	
+	public double getResultQuerySixPart2(String goId,Map<String,List<Double>> patientExpressionMapALL) {
+        Map<String,List<Double>> patientExpressionMapAML=new HashMap<String,List<Double>>();
+        try {
+            connection = DBManager.getInstance().getConnection();
+            String sql = Queries.QUERY_SIX_AML;
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, goId);
+            rs = pstmt.executeQuery();
+            
+            while(rs.next()) {
+                String patientId=rs.getString(1);
+                Double expression=Double.valueOf(rs.getInt(2));
+                if(patientExpressionMapAML.containsKey(patientId)){
+                    List<Double> expressionList=patientExpressionMapAML.get(patientId);
+                    expressionList.add(expression);
+                }
+                else{
+                    List<Double> expressionList=new ArrayList<Double>();
+                    expressionList.add(expression);
+                    patientExpressionMapAML.put(patientId, expressionList);
+                }
+                System.out.println(rs.getString(1));
+                System.out.println(rs.getInt(2));
+            }
+            return calculateJoinAndCorrelationAML(patientExpressionMapALL,patientExpressionMapAML);
+        } catch(Exception e) {
+            System.err.println(e.getMessage());
+        } finally {
+            close();
+        }
+        return 0.0;
+    }
+	
+	public double calculateJoinAndCorrelationALL(Map<String,List<Double>> patientExpressionMap){
+	    List<String> patientIds = new ArrayList<>(patientExpressionMap.keySet());
+	    List<Double> correlationList = new ArrayList<Double>();
+	    for(int i=0;i<patientExpressionMap.size();i++){
+	        for(int j=i+1;j<patientExpressionMap.size();j++){
+	            List<Double> patient1=patientExpressionMap.get(patientIds.get(i));
+	            List<Double> patient2=patientExpressionMap.get(patientIds.get(j));
+	            double[] patient1Array=convertDoubleListToArray(patient1);
+	            double[] patient2Array=convertDoubleListToArray(patient2);
+	            PearsonsCorrelation pearsonsCorrelation=new PearsonsCorrelation();
+	            double correlation=pearsonsCorrelation.correlation(patient1Array, patient2Array);
+	            correlationList.add(correlation);
+	        }
+	    }
+	    return calculateAverage(correlationList);
+	}
+	
+	
+	
+	public double calculateJoinAndCorrelationAML(Map<String,List<Double>> patientExpressionMapALL,Map<String,List<Double>> patientExpressionMapAML){
+        List<String> patientIdsALL = new ArrayList<>(patientExpressionMapALL.keySet());
+        List<String> patientIdsAML = new ArrayList<>(patientExpressionMapAML.keySet());
+        List<Double> correlationList = new ArrayList<Double>();
+        for(int i=0;i<patientExpressionMapALL.size();i++){
+            for(int j=0;j<patientExpressionMapAML.size();j++){
+                List<Double> patient1=patientExpressionMapALL.get(patientIdsALL.get(i));
+                List<Double> patient2=patientExpressionMapAML.get(patientIdsAML.get(j));
+                double[] patient1Array=convertDoubleListToArray(patient1);
+                double[] patient2Array=convertDoubleListToArray(patient2);
+                PearsonsCorrelation pearsonsCorrelation=new PearsonsCorrelation();
+                double correlation=pearsonsCorrelation.correlation(patient1Array, patient2Array);
+                correlationList.add(correlation);
+            }
+        }
+        return calculateAverage(correlationList);
+    }
+	
+	public double[] convertDoubleListToArray(List<Double> list){
+	    double[] array=new double[list.size()];
+	    for(int i=0;i<list.size();i++){
+	        array[i]=list.get(i);
+	    }
+	    return array;
+	}
+	
+	
+	public double calculateAverage(List<Double> correlationList){
+	    double sum=0.0;
+	    for(double d:correlationList){
+	        sum+=d;
+	    }
+	    return sum/correlationList.size();
+	}
+	
+	
 	/**
 	 * close the resources
 	 */

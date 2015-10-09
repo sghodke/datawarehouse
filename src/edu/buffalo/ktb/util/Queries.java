@@ -35,4 +35,11 @@ public class Queries {
 			+ "select cs.s_id from CLINICAL_SAMPLE cs JOIN PATIENT p on cs.P_ID = p.P_ID and p.P_ID in ("
 			+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and UPPER(ds.NAME) = ?))";
 
+    public static final String QUERY_SIX_ALL = "select cs.P_ID,mf.EXP from MICROARRAY_FACT mf, DISEASE ds, DIAGNOSIS dg, CLINICAL_SAMPLE cs"+
+            " where mf.S_ID=cs.S_ID and ds.DS_ID=dg.DS_ID and dg.P_ID=cs.P_ID and ds.NAME='ALL' and mf.PB_ID in ("+
+            " select pr.PB_ID from PROBE pr,GENE_FACT gf where gf.U_ID=pr.U_ID and gf.GO_ID=?)";
+
+    public static final String QUERY_SIX_AML = "select cs.P_ID,mf.EXP from MICROARRAY_FACT mf, DISEASE ds, DIAGNOSIS dg, CLINICAL_SAMPLE cs"+
+        " where mf.S_ID=cs.S_ID and ds.DS_ID=dg.DS_ID and dg.P_ID=cs.P_ID and ds.NAME='AML' and mf.PB_ID in ("+
+        " select pr.PB_ID from PROBE pr,GENE_FACT gf where gf.U_ID=pr.U_ID and gf.GO_ID=?)";
 }

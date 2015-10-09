@@ -67,7 +67,9 @@ public class QueryServlet extends HttpServlet {
             break;
             
         case "4":
-        	double tstat = queryService.getResultQueryFour("", "");
+        	String goIdFour = request.getParameter("goIdFour");
+        	String dsName = request.getParameter("dsName");
+        	double tstat = queryService.getResultQueryFour(goIdFour, dsName);
         	System.out.println("T-stat: " + tstat);
         	break;
         	
@@ -80,6 +82,15 @@ public class QueryServlet extends HttpServlet {
         	double fstat = queryService.getResultQueryFive(goId, dsNameOne, dsNameTwo, dsNameThree, dsNameFour);
         	System.out.println("F-stat:" + fstat);
         	break;
+        
+        case "6":
+            String goIdSix=request.getParameter("goIdSix");
+            double[] correlation=queryService.getResultQuerySix(goIdSix);
+            if(correlation!=null){
+            System.out.println("Correlation between two patients with ALL is-->"+correlation[0]);
+            System.out.println("Correlation between two patients with ALL and AML is-->"+correlation[1]);
+            }
+            break;  
         	
         default:
             break;

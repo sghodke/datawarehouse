@@ -106,5 +106,10 @@ public class QueryService {
 		double fstat = onw.anovaFValue(categoryData);
 		return fstat;
 	}
+	
+	 public double[] getResultQuerySix(String goId) {
+		 double[] correlation = queryDAO.getResultQuerySixPart1(goId);
+		 return correlation;
+	 }
 
 }

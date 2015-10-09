@@ -20,12 +20,20 @@
 		Query-2
 		Description: <input type="text" name="description2" />
 		<br>
+		Query-4
+		GO Id: <input type="text" name="goIdFour" />
+		Disease Name: <input type="text" name="dsName" />
+		<br />
 		Query-5
 		GO Id: <input type="text" name="goId" />
 		Disease Name 1: <input type="text" name="dsNameOne" />
 		Disease Name 2: <input type="text" name="dsNameTwo" />
 		Disease Name 3: <input type="text" name="dsNameThree" />
 		Disease Name 4: <input type="text" name="dsNameFour" />
+		<br>
+		Query-6 
+		<br>
+		Go-Id: <input type="text" name="goIdSix" />
 		<br>
 		<input type="submit" value="Get Results" />
 	</form>
