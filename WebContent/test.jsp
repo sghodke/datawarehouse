@@ -10,6 +10,10 @@
 
 	<form action="QueryServlet" id="testQuery" method="post">
 	
+		Description: <input type="text" name="description" />
+		Name: <input type="text" name="name" />
+		Type: <input type="text" name="type" />
+		
 		<input type="submit" value="Get Patient List" />
 	
 	</form>
