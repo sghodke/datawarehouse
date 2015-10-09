@@ -31,19 +31,28 @@ public class QueryService {
 		if(resultMap != null) {
 			return resultMap;
 		} else {
-			return(new HashMap<String, Integer>());
+			return (new HashMap<String, Integer>());
 		}
 	}
 	
-public List<String> getResultQueryTwo(String description) {
+	public List<String> getResultQueryTwo(String description) {
 
-        List<String> resultString = queryDAO.getResultQueryTwo(description);
-        if(resultString != null) {
-            return resultString;
+        List<String> resultList = queryDAO.getResultQueryTwo(description);
+        if(resultList != null) {
+            return resultList;
         } else {
-            return(new ArrayList<String>());
+            return (new ArrayList<String>());
         }
     }
 	
+	public List<Integer> getResultQueryThree(String clId, String muId, String dsName) {
+		
+		List<Integer> resultList = queryDAO.getResultQueryThree(clId, muId, dsName);
+		if(resultList != null) {
+			return resultList;
+		} else {
+			return (new ArrayList<Integer>());
+		}
+	}
 
 }

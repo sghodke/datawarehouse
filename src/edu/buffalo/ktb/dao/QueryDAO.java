@@ -49,13 +49,14 @@ public class QueryDAO {
 		
 		return null;
 	}
+	
 	public Map<String, Integer> getResultQueryOne(String description, String name, String type) {
 		
 		try {
 			Map<String, Integer> resultMap = new HashMap<String, Integer>();
 			
 			connection = DBManager.getInstance().getConnection();
-			String sql=Queries.Query1;
+			String sql=Queries.QUERY_ONE;
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, description);
 			pstmt.setString(2, name);
@@ -76,11 +77,13 @@ public class QueryDAO {
 		
 		return null;
 	}
+	
 	public List<String> getResultQueryTwo(String description) {
+		
 		try {
 			List<String> resultList = new ArrayList<String>();
 			connection = DBManager.getInstance().getConnection();
-			String sql = Queries.Query2;
+			String sql = Queries.QUERY_TWO;
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, description);
 			rs = pstmt.executeQuery();
@@ -100,23 +103,38 @@ public class QueryDAO {
 		return null;
 	}
 	
+	public List<Integer> getResultQueryThree(String clId, String muId, String dsName) {
+		
+		try {
+			List<Integer> resultList = new ArrayList<Integer>();
+			connection = DBManager.getInstance().getConnection();
+			String sql = Queries.QUERY_THREE;
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, clId);
+			pstmt.setString(2, muId);
+			pstmt.setString(3, dsName);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				resultList.add(rs.getInt(1));
+			}
+			
+			return resultList;
+			
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
+		
+		return null;
+	}
+	
+	
 	/**
 	 * close the resources
 	 */
 	private void close() {
+	
 		try {
-			/*if(rs != null) {
-				rs.close();
-			}
-			if (connection != null) {
-				connection.close();
-			}
-			if(stmt != null) {
-				stmt.close();
-			}
-			if(pstmt != null) {
-				pstmt.close();
-			}*/
 			DBManager.getInstance().releaseResources(connection, pstmt, rs);
 			
 		} catch (Exception e) {
