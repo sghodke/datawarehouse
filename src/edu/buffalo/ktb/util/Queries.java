@@ -36,23 +36,23 @@ public class Queries {
 			+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and UPPER(ds.NAME) = ?))";
 
     public static final String QUERY_SIX_ALL = "select cs.P_ID,mf.EXP from MICROARRAY_FACT mf, DISEASE ds, DIAGNOSIS dg, CLINICAL_SAMPLE cs"+
-            " where mf.S_ID=cs.S_ID and ds.DS_ID=dg.DS_ID and dg.P_ID=cs.P_ID and ds.NAME='ALL' and mf.PB_ID in ("+
+            " where mf.S_ID=cs.S_ID and ds.DS_ID=dg.DS_ID and dg.P_ID=cs.P_ID and ds.NAME=? and mf.PB_ID in ("+
             " select pr.PB_ID from PROBE pr,GENE_FACT gf where gf.U_ID=pr.U_ID and gf.GO_ID=?)";
 
     public static final String QUERY_SIX_AML = "select cs.P_ID,mf.EXP from MICROARRAY_FACT mf, DISEASE ds, DIAGNOSIS dg, CLINICAL_SAMPLE cs"+
-        " where mf.S_ID=cs.S_ID and ds.DS_ID=dg.DS_ID and dg.P_ID=cs.P_ID and ds.NAME='AML' and mf.PB_ID in ("+
+        " where mf.S_ID=cs.S_ID and ds.DS_ID=dg.DS_ID and dg.P_ID=cs.P_ID and ds.NAME=? and mf.PB_ID in ("+
         " select pr.PB_ID from PROBE pr,GENE_FACT gf where gf.U_ID=pr.U_ID and gf.GO_ID=?)";
     
     public static final String QUERY_PART3_ONE_A = "select pr.U_ID, mf.EXP from MICROARRAY_FACT mf JOIN PROBE pr on mf.PB_ID = pr.PB_ID "
     		+ "where mf.S_ID in ("
     		+ "select cs.s_id from CLINICAL_SAMPLE cs JOIN PATIENT p on cs.P_ID = p.P_ID and p.P_ID in ("
-    		+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and ds.NAME = 'ALL'))"
+    		+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and ds.NAME = ?))"
     		+ "order by pr.U_ID";
     
     public static final String QUERY_PART3_ONE_B = "select pr.U_ID, mf.EXP from MICROARRAY_FACT mf JOIN PROBE pr on mf.PB_ID = pr.PB_ID "
     		+ "where mf.S_ID in ("
     		+ "select cs.s_id from CLINICAL_SAMPLE cs JOIN PATIENT p on cs.P_ID = p.P_ID and p.P_ID in ("
-    		+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and ds.NAME != 'ALL'))"
+    		+ "select dg.P_ID from DIAGNOSIS dg JOIN DISEASE ds on dg.DS_ID = ds.DS_ID and ds.NAME != ?))"
     		+ "order by pr.U_ID";
     
     public static final String QUERY_THIRD_2_ALL = "select dg.P_ID,pr.U_ID,mf.EXP from MICROARRAY_FACT mf, DISEASE ds, DIAGNOSIS dg, CLINICAL_SAMPLE cs,PROBE pr" 
