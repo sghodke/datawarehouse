@@ -610,15 +610,17 @@ public class QueryDAO {
                 q++;
             }
             int u = 0;
+            stringBuffer.append("\n");
             for (double d : tValueList) {
                 stringBuffer.append("The t-value for patient-" + u);
-                stringBuffer.append(d);
+                stringBuffer.append(": "+ d);
                 stringBuffer.append("\n");
                 u++;
             }
             int y = 0;
+            stringBuffer.append("\n");
             for (String str : answersList) {
-                stringBuffer.append("The patient no-" + u
+                stringBuffer.append("The patient no-" + y
                         + " is classified as: ");
                 stringBuffer.append(str);
                 stringBuffer.append("\n");

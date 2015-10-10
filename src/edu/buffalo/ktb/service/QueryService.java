@@ -34,9 +34,9 @@ public class QueryService {
         StringBuffer buffer = new StringBuffer();
         List<String> resultList = queryDAO
                 .getResultQueryTwo(description);
-        buffer.append("Total number of Drug of Type:" + description
+        buffer.append("\nTotal number of Drug of Type:" + description
                 + " are " + resultList.size());
-        buffer.append("Drug Types:-->\n");
+        buffer.append("\nDrug Types:-->\n");
         for (String str : resultList) {
             System.out.println(str);
             buffer.append(str);
@@ -51,8 +51,7 @@ public class QueryService {
         List<Integer> resultList = queryDAO.getResultQueryThree(clId,
                 muId, dsName);
         StringBuffer buffer = new StringBuffer();
-        buffer.append(
-                "Total number of results: " + resultList.size());
+        buffer.append("\nTotal number of results: " + resultList.size());
         buffer.append("\n");
         buffer.append("mRNA values:-->\n");
         for (int i : resultList) {
@@ -84,7 +83,7 @@ public class QueryService {
         }
 
         double tstat = ttest.homoscedasticT(list1, list2);
-        buffer.append("T Stat value is--> " + tstat);
+        buffer.append("\nT Stat value is--> " + tstat);
         return buffer.toString();
     }
 
@@ -113,7 +112,7 @@ public class QueryService {
 
         OneWayAnova onw = new OneWayAnova();
         double fstat = onw.anovaFValue(categoryData);
-        buffer.append("F Stat value is--> " + fstat);
+        buffer.append("\nF Stat value is--> " + fstat);
         return buffer.toString();
     }
 
@@ -158,10 +157,9 @@ public class QueryService {
             }
         }
         for(String geneStr:geneTStats.keySet()){
-            buffer.append("Gene:"+geneStr+"--"+"T-value:"+geneTStats.get(geneStr));
-            buffer.append("\n");
+            buffer.append("\nGene: "+geneStr+", "+"T-value: "+geneTStats.get(geneStr));
         }
-        buffer.append("\nTotal info genes: " + infoGenes.size());
+        buffer.append("\n\nTotal info genes: " + infoGenes.size());
         buffer.append("\n");
         StringBuilder sb = new StringBuilder();
         String prefix = "";
@@ -170,8 +168,11 @@ public class QueryService {
             prefix = ",";
         }
         String informativeGenes = sb.toString();
-        buffer.append(informativeGenes);
-        buffer.append("\n");
+        buffer.append("\n\nInformative Genes: \n");
+        for(String infoGene : infoGenes){
+            buffer.append(infoGene);
+            buffer.append("\n");
+        }
         String result = getResultQueryPart3B(informativeGenes,
                 diseaseName);
         buffer.append(result);
@@ -191,11 +192,11 @@ public class QueryService {
         double[] correlation = queryDAO.getResultQuerySixPart1(goId,
                 disease1, disease2);
         buffer.append(
-                "Correlation between two patients with ALL is-->"
+                "\nCorrelation between two patients with ALL is --> "
                         + correlation[0]);
         buffer.append("\n");
         buffer.append(
-                "Correlation between two patients with ALL and AML is-->"
+                "Correlation between two patients with ALL and AML is --> "
                         + correlation[1]);
         return buffer.toString();
     }

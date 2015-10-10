@@ -41,59 +41,63 @@ public class QueryServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		List<Patient> patientList = queryService.getPatients();
-		System.out.println(patientList.size() + "\n");
 
-		String deseaseDescription, deseaseName, deseaseType, clusterId, measureUnitId, goId;
-
-		if (request.getParameter("button_query1") != null) {
-			deseaseDescription = request.getParameter("description_query1");
-			deseaseName = request.getParameter("name_query1");
-			deseaseType = request.getParameter("type_query1");
-			Map<String, Integer> resultQueryOne = queryService.getResultQueryOne(deseaseDescription, deseaseName, deseaseType);
-			Set<String> keys = resultQueryOne.keySet();
-			for(String key: keys) {
-				System.out.println(key + ": " + resultQueryOne.get(key));
-			}
-		} else if (request.getParameter("button_query2") != null) {
-			deseaseDescription=request.getParameter("description_query2");
-			List<String> resultQueryTwo=queryService.getResultQueryTwo(deseaseDescription);
-			System.out.println("Total number of results: "+resultQueryTwo.size());
-			System.out.println("Drug Types:-->\n");
-			for(String str:resultQueryTwo){
-				System.out.println(str);
-			}
-		} else if (request.getParameter("button_query3") != null) {
-			deseaseName = request.getParameter("name_query3");
+		String diseaseDescription, diseaseName, diseaseType, clusterId, measureUnitId, goId;
+		String queryId = request.getParameter("button_id");
+		System.out.println(queryId);
+		
+		switch(queryId){
+		case "query1": 
+			diseaseDescription = request.getParameter("description_query1");
+			diseaseName = request.getParameter("name_query1");
+			diseaseType = request.getParameter("type_query1");
+			String resultQueryOne = queryService.getResultQueryOne(diseaseDescription, diseaseName, diseaseType);
+			request.setAttribute("queryResult", resultQueryOne);
+			break;
+		case "query2": 
+			diseaseDescription=request.getParameter("description_query2");
+			String resultQueryTwo=queryService.getResultQueryTwo(diseaseDescription);
+			request.setAttribute("queryResult", resultQueryTwo);
+			break;
+		case "query3": 
+			diseaseName = request.getParameter("name_query3");
 			clusterId = request.getParameter("cluster_id_query3");
 			measureUnitId = request.getParameter("measure_unid_id_query3");
-			List<Integer> resultQueryThree=queryService.getResultQueryThree(clusterId, measureUnitId, deseaseName);
-			System.out.println("Total number of results: "+resultQueryThree.size());
-			System.out.println("mRNA values:-->\n");
-			for(int i:resultQueryThree){
-				System.out.println(i);
-			}
-		} else if (request.getParameter("button_query4") != null){
-			deseaseName = request.getParameter("name_query4");
+			String resultQueryThree=queryService.getResultQueryThree(clusterId, measureUnitId, diseaseName);
+			request.setAttribute("queryResult", resultQueryThree);
+			break;
+		case "query4": 
+			diseaseName = request.getParameter("name_query4");
 			goId = request.getParameter("go_id_query4");
-			Double resultQueryFour = queryService.getResultQueryFour(goId, deseaseName);
-			System.out.println("T Stat " + resultQueryFour);
-		} else if(request.getParameter("button_query5") != null){
-			String deseaseNameOne = request.getParameter("name1_query5");
-			String deseaseNameTwo = request.getParameter("name2_query5");
-			String deseaseNameThree = request.getParameter("name3_query5");
-			String deseaseNameFour = request.getParameter("name3_query5");
+			String resultQueryFour = queryService.getResultQueryFour(goId, diseaseName);
+			request.setAttribute("queryResult", resultQueryFour);
+			break;
+		case "query5": 
+			String diseaseNameOne = request.getParameter("name1_query5");
+			String diseaseNameTwo = request.getParameter("name2_query5");
+			String diseaseNameThree = request.getParameter("name3_query5");
+			String diseaseNameFour = request.getParameter("name3_query5");
 			goId = request.getParameter("go_id_query5");
-			Double resultQueryFive = queryService.getResultQueryFive(goId, deseaseNameOne, deseaseNameTwo, deseaseNameThree, deseaseNameFour);
-			System.out.println("F Stat " + resultQueryFive);
-		} else if(request.getParameter("button_query6") != null) { 
+			String resultQueryFive = queryService.getResultQueryFive(goId, diseaseNameOne, diseaseNameTwo, diseaseNameThree, diseaseNameFour);
+			request.setAttribute("queryResult", resultQueryFive);
+			break;
+		case "query6": 
 			goId = request.getParameter("go_id_query6");
-			double[] correlation=queryService.getResultQuerySix(goId);
-			if(correlation!=null){
-				System.out.println("Correlation between two patients with ALL is-->"+correlation[0]);
-				System.out.println("Correlation between two patients with ALL and AML is-->"+correlation[1]);
-			}
+			diseaseNameOne = request.getParameter("name1_query6");
+			diseaseNameTwo = request.getParameter("name2_query6");
+			String correlation=queryService.getResultQuerySix(goId, diseaseNameOne, diseaseNameTwo);
+			request.setAttribute("queryResult", correlation);
+			break;
+		case "query3A": 
+			diseaseName = request.getParameter("name_query3A");
+			String resultExpressions = queryService.getResultQueryPart3A(diseaseName);
+			request.setAttribute("queryResult", resultExpressions);
+			break;
+			
 		}
+		request.getRequestDispatcher("/Home.jsp").forward(request, response);		
+
+
 	}
 
 }
