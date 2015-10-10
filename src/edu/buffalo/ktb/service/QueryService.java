@@ -111,5 +111,5 @@ public class QueryService {
 		 double[] correlation = queryDAO.getResultQuerySixPart1(goId);
 		 return correlation;
 	 }
-
+	
 }

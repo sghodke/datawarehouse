@@ -142,7 +142,7 @@ public class QueryDAO {
 			pstmt.setString(1, goId);
 			pstmt.setString(2, dsName);
 			rs = pstmt.executeQuery();
-			rs.setFetchSize(5000);
+			
 			while(rs.next()) {
 				resultSubQuery1.add(rs.getInt(1));
 			}
@@ -153,7 +153,6 @@ public class QueryDAO {
 			pstmt.setString(1, goId);
 			pstmt.setString(2, dsName);
 			rs = pstmt.executeQuery();
-			rs.setFetchSize(5000);
 			while(rs.next()) {
 				resultSubQuery2.add(rs.getInt(1));
 			}
@@ -200,10 +199,6 @@ public class QueryDAO {
 		
 		return null;
 	}
-	
-	/*
-	 * Harwani
-	 */
 	
 	public double[] getResultQuerySixPart1(String goId) {
 	    Map<String,List<Double>> patientExpressionMapALL=new HashMap<String,List<Double>>();
@@ -332,7 +327,7 @@ public class QueryDAO {
 	    return sum/correlationList.size();
 	}
 	
-	
+		
 	/**
 	 * close the resources
 	 */
